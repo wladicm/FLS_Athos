@@ -7,10 +7,13 @@
 
 use uo;
 use os;
+use util;
 
+include "include/client";
 include ":attributes:attributes";
 include "include/facings";
 include "include/say";
+include ":charactercreation:resists";
 
 program skill_Stealing(mobile)
 	if ( GetProcess(CInt(GetObjProperty(mobile, "#PickPid"))) )
@@ -40,7 +43,9 @@ program skill_Stealing(mobile)
 	elseif ( targ.connected == 0 )
 		SendSysMessageEx(mobile, "Voce nao pode roubar jogadores desconectados.", SSM_FAIL);
 		return 0;
-	//elseif ( targ.npctemplate )
+	elseif (targ.npctemplate == ( ":merchants:estalagem" || ":merchants:pcmerchant" || ":merchants:pcconversation") )
+		SendSysMessageEx(mobile, "Voce nao pode roubar este tipo de NPC.", SSM_FAIL);
+		return 0;
 	//	SendSysMessageEx(mobile, "Voce so pode roubar jogadores.", SSM_FAIL);
 	//	return 0;
 	//elseif ( targ.warmode && targ.npctemplate )
@@ -49,9 +54,7 @@ program skill_Stealing(mobile)
 	elseif (!targ.IsA(POLCLASS_MOBILE))
 		SendSysMessageEx(mobile, "Voce so pode roubar jogadores.", SSM_FAIL);
 		return 0;
-	elseif (targ.npctemplate == ":merchants:estalagem")
-		SendSysMessageEx(mobile, "Voce nao pode roubar este tipo de NPC.", SSM_FAIL);
-		return 0;
+
 	elseif ( Distance(mobile, targ) > 2 )
 		SendSysMessageEx(mobile, "O alvo esta muito longe.", SSM_FAIL);
 		return 0;
@@ -184,7 +187,28 @@ program skill_Stealing(mobile)
         endif
         
 		if (check < -10) // Falha Crítica
-			CriticalFailure(mobile, targ);
+			if ( (targ.npctemplate) && (!mobile.hidden) ) // Impedir que os caras macroem sem sneak em npcs
+				CriticalFailure(mobile, targ);			
+				var resistiu;
+				resistiu := CheckResist(mobile, REFLEXOS, 40); //Teste de resistencia para mandar o cara pra cadeia
+					if(!resistiu)
+						Printtextabove (targ, "GUARDAS! Te peguei ladraozinho, vai direto pro xilindro!");
+						sleepms (2000);
+						MoveObjectToLocation(mobile, 1252, 1475, 36, mobile.realm); // Local da prisão
+						SendSysMessageEx(mobile, "Mande um .page para avisar os GMs que vc está na cadeia!");
+					else
+						PrintTextAbove(targ, "*Huh?*"); //resistiu 
+					endif
+			elseif ( (targ.npctemplate) && (targ.frozen == 1) ) // Cortar o macro, se o npc pega ele se vira randomicamente
+				CriticalFailure(mobile, targ);
+				PrintTextAbove(targ, "*Huh?*");
+				targ.frozen := 0;
+				targ.facing := RandomDiceRoll ("1d8");
+				targ.frozen := 1;
+			else //critical normal, presumo q esse se encaixaria nos reds q atacariam já
+				CriticalFailure(mobile, targ);
+				PrintTextAbove(targ, "*Huh?*");
+			endif
 		endif
 	endif
 endprogram
@@ -209,3 +233,4 @@ function CriticalFailure(mobile, targ)
 
 	return 1;
 endfunction
+
