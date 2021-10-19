@@ -295,6 +295,9 @@ function CalculateTotalDamageBonus(dmg, who, defender)
 		if (categoriaDefender == "GiantAnimal" || categoriaDefender == "Animal" || categoriaDefender == "EvilAnimal" || categoriaDefender == "Snow" || categoriaDefender == "Mount" || categoriaDefender == "Plantas" || categoriaDefender == "Terathan" || categoriaDefender == "Dragon" || categoriaDefender == "DakariCriaturas")// Aplica troca tactics-survival para mobs animais
 			tatics := CDbl(AP_GetSkill(who, SURVIVAL))/400.0; //Aplica bonus de Survival se forem criaturas selvagens ou dragões
 			SkillCheck(who, SURVIVAL, -1);
+		else
+			tatics := CDbl(AP_GetSkill(who, TACTICS))/400.0; //Aplica bonus de tactics na chance de critico quando não é o caso de animais ou feras
+			SkillCheck(who, TACTICS, -1);		
 		endif
 	else
 		tatics := CDbl(AP_GetSkill(who, TACTICS))/400.0; //Aplica bonus de tactics na chance de critico quando não é nenhum caso específico
