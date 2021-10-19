@@ -29,8 +29,13 @@ function FL_CalculateFinalDamage(attacker, weapon, rawdamage)
 		backstabDmg := CInt(AP_GetSkill(attacker, BACKSTAB))*2;
 	elseif (GetObjProperty(attacker, "backstab") == 2)
 		backstabDmg := CInt(AP_GetSkill(attacker, BACKSTAB))*0.4;
-	elseif (GetObjProperty(attacker, "kit") == "Ranger") && (categoriaDefender == "GiantAnimal" || categoriaDefender == "Animal" || categoriaDefender == "EvilAnimal" || categoriaDefender == "Snow" || categoriaDefender == "Mount" || categoriaDefender == "Plantas" || categoriaDefender == "Terathan" || categoriaDefender == "Dragon" || categoriaDefender == "DakariCriaturas")// Aplica troca tactics-survival para mobs animais
-		tacticsDmg := Cint( (AP_GetSkill(attacker, SURVIVAL)/1.6) )
+	endif
+	if (GetObjProperty(attacker, "kit") == "Ranger")
+		if (categoriaDefender == "GiantAnimal" || categoriaDefender == "Animal" || categoriaDefender == "EvilAnimal" || categoriaDefender == "Snow" || categoriaDefender == "Mount" || categoriaDefender == "Plantas" || categoriaDefender == "Terathan" || categoriaDefender == "Dragon" || categoriaDefender == "DakariCriaturas") // Aplica troca tactics-survival para mobs animais
+			tacticsDmg := Cint( (AP_GetSkill(attacker, SURVIVAL)/1.6) );
+		else
+			tacticsDmg;
+		endif
 	endif
 	var lumberjackingDmg := 0;
 	if (weapon.attribute == "Axe")
