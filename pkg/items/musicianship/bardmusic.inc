@@ -835,7 +835,7 @@ function escrevePartitura(byref who, byref partitura)
 		var magica;
 
 		if (TemHabilidade(who, "Compositor Talentoso")) //muitas vezes mais chance que um bardo comum de conseguir escrever uma partitura lendária
-			magica := 1 + RandomInt(200);
+			magica := 1 + RandomInt(100);
 		else
 			magica := 1 + RandomInt(3000);
 		endif
@@ -1694,23 +1694,23 @@ function musicaEfeitos(byref who, byref magica, byref tempo) //DOING
 	var range := 0;
 	var duration := tempo;
 	var sound_duration := tempo/1000;
-	var resistencia_mod := - CInt(MagicLore/2.5);  //Redutor nos testes de resistência inimigos
+	var resistencia_mod := - CInt(MagicLore/2.0);  //Redutor nos testes de resistência inimigos
 	var HarmoniaPerfeita, Vituperio;
 
 	//Calcula o modificador base da intensidade dos efeitos
-	if(MagicLore <= 40)
+	if(MagicLore < 40)
 		modifier := 5 + CInt(MagicLore/10); //limite 5-9
 		range := 2 + CInt(MagicLore/10); //limite 2-6
 		duration  := (tempo * (1.0 + (MagicLore/400)))/1000; //limite 1.0-1.1 vezes o tempo base
-	elseif (MagicLore <= 70)
+	elseif (MagicLore < 70)
 		modifier := 5 + CInt(MagicLore/5); //limite 13-19
 		range := 5 + CInt(MagicLore/10); //limite 9-12
 		duration  := (tempo * (1.0 + (MagicLore/200)))/1000; //limite 1.2-1.35 vezes o tempo base
-	elseif (MagicLore <= 100)
+	elseif (MagicLore < 100)
 		modifier := 5 + CInt(MagicLore/4); //limite 22-30
 		range := CInt(MagicLore/5); //limite 14-20
 		duration  := (tempo * (1.0 + (MagicLore/100)))/1000; //limite 1.7-2.0 vezes o tempo base
-	elseif (MagicLore > 100) //Lendário
+	elseif (MagicLore >= 100) //Lendário
 		modifier := 5 + CInt(MagicLore/2); //limite 55-60
 		range := CInt(MagicLore/5); //limite 14-20
 		duration  := (tempo * (1.0 + (MagicLore/50)))/1000; //limite 3.0-3.2 vezes o tempo base
@@ -1729,17 +1729,17 @@ function musicaEfeitos(byref who, byref magica, byref tempo) //DOING
 		range := range + 5; //dobra a area de efeito das cancoes
 	endif
 
-	//Habilita eficacia extra nos buffs OU debuffs, nunca os dois
+	BuffModifier := modifier;  //porder base dos Buffs
+	DebuffModifier := modifier; //poder base do Debuffs
+
+	//Habilita eficacia extra nos buffs e debuffs
 	if (TemHabilidade(who, "Musica Contagiante"))
 		BuffModifier := modifier * 2;  //dobra o porder dos Buffs
-		DebuffModifier := modifier; //Debuffs com poder base
-	elseif (TemHabilidade(who, "Musica da Alma"))
-		BuffModifier := modifier;  //buffs com poder base
+	endif
+
+	if (TemHabilidade(who, "Musica da Alma"))
 		DebuffModifier := modifier * 1.5;  //aumenta o porder dos Buffs
 		resistencia_mod := resistencia_mod - 20; //torna os Debuffs mais dificies de resistir
-	else
-		BuffModifier := modifier;  //buffs com poder base
-		DebuffModifier := modifier; //Debuffs com poder base
 	endif
 
 	if (TemHabilidade(who, "Mestre do Improviso"))
@@ -1748,15 +1748,15 @@ function musicaEfeitos(byref who, byref magica, byref tempo) //DOING
 
 	//Habilita efeitos extras nos buffs OU debuffs, nunca os dois
 
+	HarmoniaPerfeita := 0;
+	Vituperio := 0;
+
 	if (TemHabilidade(who, "Harmonia Perfeita"))
 		HarmoniaPerfeita := 1;
-		Vituperio := 0;
-	elseif (TemHabilidade(who, "Vituperio"))
+	endif
+	if (TemHabilidade(who, "Vituperio"))
 		HarmoniaPerfeita := 0;
 		Vituperio := 1;
-	else
-		HarmoniaPerfeita := 0;
-		Vituperio := 0;
 	endif
 
 	var resistiu;
