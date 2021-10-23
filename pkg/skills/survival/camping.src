@@ -75,10 +75,13 @@ program UseWood( who, wood )
                 var healpoints := (AP_GetSkill(who, SURVIVAL) / 20) + 1;
 
 		while( time > 0 )
-			if (GetObjProperty(campfire, "encantado") == 1)
+			if (GetObjProperty(campfire, "encantado") == 1) 
 				time := time + 60;
 				healpoints := healpoints*2;
 				EraseObjProperty(campfire, "encantado");
+			elseif (Temhabilidade(who, "Acampamento Seguro"))
+				time := time + 60;
+				healpoints := healpoints*2;
 			endif
 			time := time - 1;
 			tempocura := tempocura + 1;
