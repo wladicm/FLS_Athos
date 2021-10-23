@@ -1,0 +1,54 @@
+use uo;
+use os;
+
+include "include/sysEvent";
+include ":attributes:attributes";
+include ":timedScripts:timedScripts";
+include "include/say";
+include "include/damage";
+include ":taming:taming";
+include "include/client";
+include ":mounts:mounts";
+
+program cargaselvagem(who)
+
+    SendSysMessageEx(who, "Qual animal deve atacar?", SSM_REQUEST);
+    var targ := Target(who);
+    var tamed := GetObjProperty(who, "TamedPets");
+    //var dono := GetObjProperty(targ, "owner");
+
+
+    if (!CheckLOSAt(who, targ.x, targ.y, targ.z))
+        SendSysMessageEx(who, "O Animal nao esta visivel para voce.", SSM_FAIL);
+        return 0;
+    endif
+    
+    if ( targ.serial in tamed )
+
+        PrintTextAbove(who, "*Comanda o animal*");
+        PrintTextAbove(targ, "*Postura Agressiva*");
+
+        SendSysMessageEx(who, "Em quem seu animal deve avançar?", SSM_REQUEST);
+        var alvo := Target(who);
+
+        if(!CheckLosAt(who, alvo.x, alvo.y, alvo.z))
+            SendSysMessageEx(who, "Voce nao consegue ver o alvo.", SSM_FAIL);
+            return 0;
+        endif
+
+        PrintTextAbove(targ, "*Avança em furia*");
+
+        var event := struct{"type":=SYSEVENT_ENGAGED, "source":=alvo};
+        SendEvent(targ, event);
+
+        MoveObjectToLocation(targ, alvo.x, alvo.y, alvo.z, alvo.realm, MOVEOBJECT_FORCELOCATION);
+        targ.attack_once(alvo);
+        
+        TS_StartTimer(alvo, "paralysis", 8);
+        PrintTextAbove(alvo, "*Atordoado*");
+    
+    else
+        SendSysMessageEx(who, "Esta criatura nao pertence a voce.", SSM_FAIL);
+        return 0;
+    endif
+endprogram
