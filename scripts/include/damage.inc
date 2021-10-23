@@ -9,6 +9,7 @@ use uo;
 use os;
 use math;
 use cfgfile;
+use basic; //added
 
 include ":tn:cooldown";
 include ":brainAI:npcUtil";
@@ -18,6 +19,12 @@ include ":charactercreation:habilidades";
 include "include/say";
 include ":blood:blood";
 include ":fls_core:packets";
+//added
+include ":tn:combat";
+include "include/client";
+include ":blood:blood";
+include ":combat:settings";
+
 
 /*
  * http://uo.stratics.com/content/guides/resistance.shtml
@@ -283,11 +290,10 @@ function CalculateTotalDamageBonus(dmg, who, defender)
 	var skillCriticalBonus;
 	var categoriaDefender := NPC_GetNPCConfig(defender.npctemplate).Category;
 	//print("Categoria: "+categoriaDefender);
-
-
+	
 	if (who.npctemplate) //Se for NPC utiliza tactics
 		tatics := CDbl(AP_GetSkill(who, TACTICS))/400.0; //Armazena o valor da skill que afeta dano
-		SkillCheck(who, TACTICS, -1);
+		SkillCheck(who, TACTICS, -1); 
 	elseif (GetObjProperty(who, "kit") == "Emissario de Combate")// Alterado antes era Mago de Combate
 		tatics := CDbl(AP_GetSkill(who, MAGICLORE))/400.0; //Aplica bonus de magiclore na chance de critico quando é Mago de Combate
 		SkillCheck(who, MAGICLORE, -1);
@@ -296,8 +302,8 @@ function CalculateTotalDamageBonus(dmg, who, defender)
 			tatics := CDbl(AP_GetSkill(who, SURVIVAL))/400.0; //Aplica bonus de Survival se forem criaturas selvagens ou dragões
 			SkillCheck(who, SURVIVAL, -1);
 		else
-			tatics := CDbl(AP_GetSkill(who, TACTICS))/400.0; //Aplica bonus de tactics na chance de critico quando não é o caso de animais ou feras
-			SkillCheck(who, TACTICS, -1);		
+			tatics := CDbl(AP_GetSkill(who, TACTICS))/400.0; //Aplica bonus de tactics na chance de critico quando não é nenhum caso específico
+			SkillCheck(who, TACTICS, -1);
 		endif
 	else
 		tatics := CDbl(AP_GetSkill(who, TACTICS))/400.0; //Aplica bonus de tactics na chance de critico quando não é nenhum caso específico
@@ -374,7 +380,7 @@ function CalculateTotalDamageBonus(dmg, who, defender)
 		endif
 	endif
 
-	if (GetCooldown(who, "marcadacaca"))
+	if (GetCooldown(who, "embuste"))
 			other := other + 0.75; //75% - balanceamento depois da mudanca de calculo do dano
 	endif
 
