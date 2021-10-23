@@ -1,0 +1,45 @@
+use os;
+
+include "include/say";
+include ":timedscripts:timedScripts";
+include "include/client";
+include ":brainai:npcUtil";
+//include ":tn:npcutil";
+include ":tn:cooldown";
+//include ":ghaia:ghaia";
+include "include/sysEvent";
+//include ":ghaia:ghaiaUtil";
+
+program amigobesta(who)
+   SendSysMessageEx(who, "Qual animal voce deseja acalmar?", SSM_REQUEST);
+   var targ := Target(who);
+
+   if (!targ || !targ.isA(POLCLASS_NPC))
+      SendSysMessageEx(who, "Cancelado.", SSM_INFO);
+      return 0;
+   endif
+   var cfg := ReadConfigFile(":brainai:npcdesc");
+   var npctemplate := NPC_ParseTemplateName(targ.npctemplate);
+   if ((cfg[npctemplate.template].Category != "Bestas") && (cfg[npctemplate.template].Category != "Animal") && (cfg[npctemplate.template].Category != "EvilAnimal") && (cfg[npctemplate.template].Category != "GiantAnimal"))
+      SendSysMessageEx(who, "So pode acalmar animais.", SSM_INFO);
+      return 0;
+   elseif (GetObjProperty(targ, "#peacemade") )
+      SendSysMessageEx(who, "A criatura ja esta pacificada.", SSM_INFO);
+      return 0;
+   endif
+
+   targ.paralyzed := 1;
+   SetCooldown(targ, "peacemade", 60);
+   ghaiaPeaceMade(who, targ);
+   PrintTextAbovePrivate(targ, "A criatura foi acalmada.", who);
+
+   return 1;
+endprogram
+
+function ghaiaPeaceMade(who, npc)
+	var ev 		:= struct;
+	ev.type 	:= EVID_PEACEMADE;
+	ev.source 	:= who;
+	
+	sendEvent( npc, ev);
+endfunction
