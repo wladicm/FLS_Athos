@@ -1,0 +1,22 @@
+Use uo;
+use os;
+use cfgfile;
+use file;
+
+include ":DiscordWebhook:outbound";
+include ":DiscordWebhook:report";
+
+program textcmd_testdiscordbot(who)
+	var presetType := RequestInput(who, who.backpack, "Qual campo vc quer usar(narra):" );
+	var message := RequestInput(who, who.backpack, "Narre:" );
+	var outbound := PresetDiscordMessage( message, presetType);
+
+	if(outbound == error)
+		SendsysMessage( who, outbound.errortext );
+	elseif (presetType == "narra")
+		MG_ReportText(who.acctname+ " sob o char " +who.name+ " NARROU: " +message, MG_REPORT_SYSLOG);
+	endif
+//	LogToFile("log/discordbot.log", who.name+" ("+who.acctname+") editou "+outbound+" ("+who.acctname+") <br>", LOG_DATETIME);
+	
+
+endprogram
