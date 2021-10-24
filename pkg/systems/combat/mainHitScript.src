@@ -450,7 +450,7 @@ function WearDownArmor(defender, armor, rawdamage, weapon)
 		//Diminui pela metade a chance de um equipamento quebrar com a habilidde Conservar Equipamento
 		var wearchance := armr_elem.WearChance;
 		if ( TemHabilidade(defender, "Conservar Equipamento"))
-			wearchance := wearchance/2;
+			wearchance := wearchance/5; // Alterei de 2 para 5
 			if (wearchance < 1)
 				wearchance := 1;
 			endif
