@@ -68,8 +68,10 @@ program drink ( character, drink )
 		SendSysMessage (character, "Voce se refresca.", FONT_NORMAL, 90);
 		SetObjProperty ( character, "refresco", 1 );
 		detach();
-		sleep(1000); //15 minutos e pouco de refresco, os testes de calor são feitos a cada 5 minutos
+		Releaseitem(drink);
+		sleep(1000); //15 minutos e pouco de refresco, os testes de calor são feitos a cada 5 minutos 1000
 		EraseObjProperty(character, "refresco");
+		SendSysMessage (character, "Voce nao se sente mais refrescado", FONT_NORMAL, 90);
 	endif
 
 	if (drink_proof)
