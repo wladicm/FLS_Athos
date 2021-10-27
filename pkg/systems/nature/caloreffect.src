@@ -54,13 +54,13 @@ program calor(params)
                 dif := dif - 40; // Quatro níveis mais fácil
             endif
 
-            if ( GetObjProperty(who, "chardata").povo == "Thuriao")
-                dif := dif + 60; // Quatro níveis mais difícil
-            endif
+ //           if ( GetObjProperty(who, "chardata").povo == "Thuriao")
+ //               dif := dif + 60; // Quatro níveis mais difícil
+ //           endif
 
-            if ( GetObjProperty(who, "chardata").povo == "Aquilrano")
-                dif := dif - 75; // Cinco níveis mais fácil
-            endif
+ //           if ( GetObjProperty(who, "chardata").povo == "Aquilrano")
+ //               dif := dif - 75; // Cinco níveis mais fácil
+ //           endif
 			
             if ( GetObjProperty(who, "refresco") == 1) //permite resistencia no deserto por cantil
                 dif := dif - 60; // Três níveis mais fácil
@@ -82,7 +82,7 @@ program calor(params)
                 endif
             endforeach
 
-            foreach item in ( ListItemsNearLocation( who.x, who.y, who.z, 18, who.realm ) )
+            foreach item in ( ListItemsNearLocation( who.x, who.y, who.z, 28, who.realm ) )
                  //Oasis e Clareira facilitam a resistência ao calor em três níveis de dificuldade
                  if ((item.objtype == 0xa5a) || (item.objtype == 0xa5b))
                     dif := dif - 45;
