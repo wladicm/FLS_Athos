@@ -6,6 +6,7 @@ use cfgfile;
 include ":ghaia:generic";
 include ":ghaia:ghaia";
 include ":ghaia:objective";
+include "include/generic";
 
 var npccfgfile := ReadConfigFile( ":brainai:npcdesc" );
 var me := self();
@@ -89,7 +90,7 @@ endprogram
 
 function CloseDistance( opponent )
 
-	if ( GetObjProperty(me, "noclosecombat") == 1)
+	if ( GetObjPRoperty(me, "noclosecombat") == 1)
 		return 0;
 	endif
 
@@ -106,7 +107,7 @@ var sleepdelay := 275 - me.run_speed;//(CInt(GetDexterity(me)) * 1.5);
             return 1;
         default:
 		if (!CheckLineofSight(me, opponent)) //se nao consegue ver
-			var path := GetObjProperty(me, "path"); //procura se ja calculou o path
+			var path := GetObjPRoperty(me, "path"); //procura se ja calculou o path
 			if (path == error) //se nao calculou
 				var flags := FP_IGNORE_MOBILES;
 				if ( cint(GetObjProperty(me, "ignoredoor")) || cint(GetObjProperty(me, "opendoor")) )
@@ -124,7 +125,7 @@ var sleepdelay := 275 - me.run_speed;//(CInt(GetDexterity(me)) * 1.5);
 					SetObjProperty(me, "#coordtry", ReadGameClock()); 
 					RunTowardLocation( coord.x, coord.y ); //anda na direcao
 					sleepms(sleepdelay);
-					Opendoors(me, opponent); //tenta abrir possiveis portas
+					Opendoors(me); //tenta abrir possiveis portas
 					if (CoordinateDistance(me.x, me.y, coord.x, coord.y) <= 1) //se chegou onde devia 
 						path.erase(1); //deleta a coordenada e vai pra proxima
 						if (path.size() > 0)
@@ -154,42 +155,6 @@ var sleepdelay := 275 - me.run_speed;//(CInt(GetDexterity(me)) * 1.5);
             return 0;
     endcase
 
-endfunction
-
-function ChooseAnotherOpponent(me)
-
-	var otherTarget := ListMobilesNearLocationEx( me.x, me.y, me.z, 8, LISTEX_FLAG_NORMAL, me.realm );
-	if  (otherTarget.size() > 0)
-		foreach mob in otherTarget
-			if(CanFight(me, mob, align)) //verifica se eh inimigo
-				Fight(mob);
-			endif
-		endforeach
-	else
-	return 0;
-	endif
-
-endfunction
-
-function Opendoors(me, opponent)
-
-  foreach door in (ListItemsNearLocation(me.x, me.y, me.z, 1))
-    if  ((door.isa(POLCLASS_DOOR)) and (!door.locked)) //se nao ta trancada
-
-//	if (CheckLosBetween( door.x, door.y, door.z, opponent.x, opponent.y, opponent.z, me.realm )) // se a porta vai me levar ate o oponente
-
-		if ( cint(GetObjProperty(me, "ignoredoor")) == 1)
-			PrintText(me, "*atravessa a porta*");
-			MoveObjectToLocation(me, door.x, door.y, door.z, door.realm, MOVEOBJECT_FORCELOCATION);
-		elseif (cint(GetObjProperty(me, "opendoor")) == 1)
-			PrintText(me, "*abre a porta*");
-			door.Open();
-		endif
-//	else
-//		printtextabove(me, "a porta nao ajudara");
-//	endif
-	endif
-  endforeach
 endfunction
 
 function look_around()

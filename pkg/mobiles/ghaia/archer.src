@@ -4,6 +4,7 @@ use cfgfile;
 
 include ":ghaia:generic";
 include ":ghaia:ghaia";
+include "include/generic";
 
 var npccfgfile := ReadConfigFile( ":brainai:npcdesc" );
 var me := self();
@@ -31,9 +32,7 @@ program KillPlayers()
 	EnableMainEvents();
 
     	while(me)
-	
 
-			
 		look_around(); 
 		wander();
 		PlayIdleSound();
@@ -47,13 +46,6 @@ program KillPlayers()
 		else
 			ev := os::wait_for_event(10);
 		endif
-
-		//SLEEPING:
-			//ev := sleepmode();
-
-		//FIGHTING:
-		//	Fight(ev.source);
-	//	endcase
 
 		if(ev)
 			case(ev.type)
@@ -69,17 +61,17 @@ program KillPlayers()
 				EVID_ALERT_ALLIES:	wanders := 0; Fight(ev.opponent, 1);
 				EVID_HERDING:		herd(ev);
 				EVID_TAUNT:
-							if(ev.source)
-								wanders := 0; Fight(ev.opponent);
-							endif
+						if(ev.source)
+							wanders := 0; Fight(ev.opponent);
+						endif
 				EVID_FLEE:
-							if (ev.source)
-								flee(ev.source);
-							endif
+						if (ev.source)
+							flee(ev.source);
+						endif
 
 			endcase
 		endif	
-		
+		sleepms(5);
 	endwhile
 
 endprogram
@@ -94,21 +86,22 @@ function CloseDistance(opponent)
 
 	var dist := CoordinateDistance(me.x, me.y, opponent.x, opponent.y);
 	
-	if (me.z > opponent.z +18) //checa se esta em cima de alguma torre
-		if (!CheckLineofSight(me, opponent)) //IA para torres: Verifica se tem visão do oponente
-			if (RandomInt(4) == 0 ) //se não tiver visão, tem 25% de mudar de alvo
+	if (me.z > cint(opponent.z+15)) //checa se esta em cima de alguma torre
+		if (!CheckLineofSight(me, opponent)) //IA para torres: Verifica se tem vis�o do oponente
+			if (RandomInt(4) == 0 ) //se n�o tiver vis�o, tem 25% de mudar de alvo
+				sleepms(sleepdelay);
 				ChooseAnotherOpponent(me);
 			endif
 		endif
-		return 0; //se estiver em cima de torres, não se move do lugar
+		sleepms(sleepdelay);
+		return 0; //se estiver em cima de torres, n�o se move do lugar
 	endif
 
-	if (dist < 4 )
+	if (dist < 3 )
 		RunAwayFrom(opponent);
 		sleepms(sleepdelay);
 	elseif (dist > 10)
-		RunToward( opponent );
-		sleepms(sleepdelay);
+		CalcPathAndMove(me, opponent, sleepdelay);
 	else
 		return 1;
 	endif
@@ -117,26 +110,11 @@ function CloseDistance(opponent)
 
 endfunction
 
-function ChooseAnotherOpponent(me)
-
-	var otherTarget := ListMobilesNearLocationEx( me.x, me.y, me.z, 8, LISTEX_FLAG_NORMAL, me.realm );
-	if  (otherTarget.size() > 0)
-		foreach mob in otherTarget
-			if(CanFight(me, mob, align)) //verifica se eh inimigo
-				Fight(mob);
-			endif
-		endforeach
-	else
-	return 0;
-	endif
-
-endfunction
-
 function look_around()
-  foreach npc in ListMobilesInLineOfSight(me, areasize)
-    if( CanFight(me, npc, align) )
-         Fight(npc);
-    endif
-    sleepms(2);
-  endforeach
+	foreach npc in ListMobilesInLineOfSight(me, areasize)
+		if( CanFight(me, npc, align) )
+			Fight(npc);
+		endif
+		sleepms(5);
+	endforeach
 endfunction
