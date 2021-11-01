@@ -43,7 +43,7 @@ program skill_Stealing(mobile)
 	elseif ( targ.connected == 0 )
 		SendSysMessageEx(mobile, "Voce nao pode roubar jogadores desconectados.", SSM_FAIL);
 		return 0;
-	elseif (targ.npctemplate == ( ":merchants:estalagem" || ":merchants:pcmerchant" || ":merchants:pcconversation") )
+	elseif ( (targ.npctemplate == ":merchants:merchant") || (targ.npctemplate == ":merchants:cambio" ) || (targ.npctemplate == ":merchants:conversation") || (targ.npctemplate == ":merchants:estalagem") || (targ.npctemplate == ":merchants:gemVendor") || (targ.npctemplate == ":merchants:treinador") || (targ.npctemplate == ":merchants:trocaskill") )
 		SendSysMessageEx(mobile, "Voce nao pode roubar este tipo de NPC.", SSM_FAIL);
 		return 0;
 	//	SendSysMessageEx(mobile, "Voce so pode roubar jogadores.", SSM_FAIL);
@@ -187,14 +187,98 @@ program skill_Stealing(mobile)
         endif
         
 		if (check < -10) // Falha Crítica
-			if ( (targ.npctemplate) && (!mobile.hidden) ) // Impedir que os caras macroem sem sneak em npcs
+			if ( (targ.npctemplate == ":brainai:HumanArcher") && (!mobile.hidden) )  // Impedir que os caras macroem sem sneak em npcs
 				CriticalFailure(mobile, targ);			
 				var resistiu;
 				resistiu := CheckResist(mobile, REFLEXOS, 40); //Teste de resistencia para mandar o cara pra cadeia
 					if(!resistiu)
 						Printtextabove (targ, "GUARDAS! Te peguei ladraozinho, vai direto pro xilindro!");
 						sleepms (2000);
-						MoveObjectToLocation(mobile, 1252, 1475, 36, mobile.realm); // Local da prisão
+						MoveObjectToLocation(mobile, 2320, 1181, 0, mobile.realm); // Local da prisão
+						SendSysMessageEx(mobile, "Mande um .page para avisar os GMs que vc está na cadeia!");
+					else
+						PrintTextAbove(targ, "*Huh?*"); //resistiu 
+					endif
+			elseif ( (targ.npctemplate == ":brainai:HumanKnight") && (!mobile.hidden) ) // fiz de todos da categoria humanos
+				CriticalFailure(mobile, targ);			
+				var resistiu;
+				resistiu := CheckResist(mobile, REFLEXOS, 40); //Teste de resistencia para mandar o cara pra cadeia
+					if(!resistiu)
+						Printtextabove (targ, "GUARDAS! Te peguei ladraozinho, vai direto pro xilindro!");
+						sleepms (2000);
+						MoveObjectToLocation(mobile, 2320, 1181, 0, mobile.realm); // Local da prisão
+						SendSysMessageEx(mobile, "Mande um .page para avisar os GMs que vc está na cadeia!");
+					else
+						PrintTextAbove(targ, "*Huh?*"); //resistiu 
+					endif
+			elseif ( (targ.npctemplate == ":brainai:HumanWarrior") && (!mobile.hidden) )
+				CriticalFailure(mobile, targ);			
+				var resistiu;
+				resistiu := CheckResist(mobile, REFLEXOS, 40); //Teste de resistencia para mandar o cara pra cadeia
+					if(!resistiu)
+						Printtextabove (targ, "GUARDAS! Te peguei ladraozinho, vai direto pro xilindro!");
+						sleepms (2000);
+						MoveObjectToLocation(mobile, 2320, 1181, 0, mobile.realm); // Local da prisão
+						SendSysMessageEx(mobile, "Mande um .page para avisar os GMs que vc está na cadeia!");
+					else
+						PrintTextAbove(targ, "*Huh?*"); //resistiu 
+					endif
+			elseif ( (targ.npctemplate == ":brainai:HumanWarrior2") && (!mobile.hidden) )
+				CriticalFailure(mobile, targ);			
+				var resistiu;
+				resistiu := CheckResist(mobile, REFLEXOS, 40); //Teste de resistencia para mandar o cara pra cadeia
+					if(!resistiu)
+						Printtextabove (targ, "GUARDAS! Te peguei ladraozinho, vai direto pro xilindro!");
+						sleepms (2000);
+						MoveObjectToLocation(mobile, 2320, 1181, 0, mobile.realm); // Local da prisão
+						SendSysMessageEx(mobile, "Mande um .page para avisar os GMs que vc está na cadeia!");
+					else
+						PrintTextAbove(targ, "*Huh?*"); //resistiu 
+					endif
+			elseif ( (targ.npctemplate == ":brainai:humanfemale" ) && (!mobile.hidden) )
+				CriticalFailure(mobile, targ);			
+				var resistiu;
+				resistiu := CheckResist(mobile, REFLEXOS, 40); //Teste de resistencia para mandar o cara pra cadeia
+					if(!resistiu)
+						Printtextabove (targ, "GUARDAS! Te peguei ladraozinho, vai direto pro xilindro!");
+						sleepms (2000);
+						MoveObjectToLocation(mobile, 2320, 1181, 0, mobile.realm); // Local da prisão
+						SendSysMessageEx(mobile, "Mande um .page para avisar os GMs que vc está na cadeia!");
+					else
+						PrintTextAbove(targ, "*Huh?*"); //resistiu 
+					endif
+			elseif ( (targ.npctemplate == ":brainai:humanmale" ) && (!mobile.hidden) )
+				CriticalFailure(mobile, targ);			
+				var resistiu;
+				resistiu := CheckResist(mobile, REFLEXOS, 40); //Teste de resistencia para mandar o cara pra cadeia
+					if(!resistiu)
+						Printtextabove (targ, "GUARDAS! Te peguei ladraozinho, vai direto pro xilindro!");
+						sleepms (2000);
+						MoveObjectToLocation(mobile, 2320, 1181, 0, mobile.realm); // Local da prisão
+						SendSysMessageEx(mobile, "Mande um .page para avisar os GMs que vc está na cadeia!");
+					else
+						PrintTextAbove(targ, "*Huh?*"); //resistiu 
+					endif
+			elseif ( (targ.npctemplate == ":merchants:rumor" ) && (!mobile.hidden) )
+				CriticalFailure(mobile, targ);			
+				var resistiu;
+				resistiu := CheckResist(mobile, REFLEXOS, 40); //Teste de resistencia para mandar o cara pra cadeia
+					if(!resistiu)
+						Printtextabove (targ, "GUARDAS! Te peguei ladraozinho, vai direto pro xilindro!");
+						sleepms (2000);
+						MoveObjectToLocation(mobile, 2320, 1181, 0, mobile.realm); // Local da prisão
+						SendSysMessageEx(mobile, "Mande um .page para avisar os GMs que vc está na cadeia!");
+					else
+						PrintTextAbove(targ, "*Huh?*"); //resistiu 
+					endif
+			elseif ( (targ.npctemplate == ":merchants:talker" ) && (!mobile.hidden) )
+				CriticalFailure(mobile, targ);			
+				var resistiu;
+				resistiu := CheckResist(mobile, REFLEXOS, 40); //Teste de resistencia para mandar o cara pra cadeia
+					if(!resistiu)
+						Printtextabove (targ, "GUARDAS! Te peguei ladraozinho, vai direto pro xilindro!");
+						sleepms (2000);
+						MoveObjectToLocation(mobile, 2320, 1181, 0, mobile.realm); // Local da prisão
 						SendSysMessageEx(mobile, "Mande um .page para avisar os GMs que vc está na cadeia!");
 					else
 						PrintTextAbove(targ, "*Huh?*"); //resistiu 
@@ -233,4 +317,3 @@ function CriticalFailure(mobile, targ)
 
 	return 1;
 endfunction
-

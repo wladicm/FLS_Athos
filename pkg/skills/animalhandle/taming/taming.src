@@ -121,11 +121,11 @@ function taming(who)
 //		SendSysMessage(who, "Alvo esta muito distante.");
 //		return;
 	elseif ( targ.script["tamed"] )
-		//if( targ.master.serial == who.serial )
-		//	TeachGump(who, targ);
-		//else
+		if ( ( targ.master.serial == who.serial ) && TemHabilidade(who, "Adestramento") ) // adicionado pedir habilidade para adestrar animal domado
+			TeachGump(who, targ);
+		else
 			SendSysMessageEx(who, targ.name+" nao pode ser adestrado.", SSM_FAIL);
-		//endif
+		endif
 		return 0;
 	elseif ( (GetNumPets(who) + GetPetCost(targ)) > GetMaxPets(who) )
 		SendSysMessageEx(who, "Voce nao pode ter mais animais domados.", SSM_FAIL);
@@ -181,7 +181,7 @@ function taming(who)
 				SetObjproperty(targ, "script", targ.script);
 				SetObjProperty(targ, "AntigoTreinadorID", who.serial);
 
-				targ.script := ":ghaia:tamed";
+				targ.script := ":ghaia:tamed"; 
 				RestartScript(targ);
 
 				Run_Script_To_Completion(":death:npcdeath", {targ});
@@ -492,7 +492,7 @@ function acalmar( who)
 	//verifica a skill de combate do NPC
 
 	var advance_flags;
-	if(creature.script == ":ghaia:tamed")
+	if(creature.script == ":ghaia:tamed") //alterado pra mudar do ghaia
 		advance_flags := ADV_DISABLE;
 	else
 		advance_flags := ADV_SKILL;

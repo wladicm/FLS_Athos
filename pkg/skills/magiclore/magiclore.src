@@ -39,9 +39,9 @@ program skill_armslore(who)
 		endif
 	endif
 
-	if (item.graphic == 3849)
+/*	if (item.graphic == 3849)
 		PrintText(who, "*analisando um frasco*");
-		if (SkillCheck(who, MAGICLORE || ALCHEMY, -1) > 0) //ALTERADO PARA INCLUIR ALCHEMY SKILL NA checagem
+		if (SkillCheck(who, MAGICLORE, -1) > 0) 
 			var cfg := ReadConfigFile(":*:itemdesc");
 			var entry := cfg[item.objtype];
 			if (entry)
@@ -65,7 +65,7 @@ program skill_armslore(who)
 		else
 			SendSysMessageEx(who, "Voce nao esta certo..", SSM_FAIL);
 		endif
-	else
+	else*/
 		PrintText(who, "*analisando um item*");
 
 		if (SkillCheck(who, MAGICLORE, -1) > 0)

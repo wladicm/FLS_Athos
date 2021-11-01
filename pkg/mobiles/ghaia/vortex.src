@@ -4,6 +4,7 @@ use cfgfile;
 
 include ":ghaia:generic";
 include ":ghaia:ghaia";
+include "include/generic";
 
 var npccfgfile := ReadConfigFile( ":brainai:npcdesc" );
 var me := self();
@@ -115,17 +116,6 @@ function CloseDistance(opponent)
 
 endfunction
 
-function ChooseAnotherOpponent(me)
-
-	var otherTarget := ListMobilesNearLocationEx( me.x, me.y, me.z, 8, LISTEX_FLAG_NORMAL, me.realm );
-	if  (otherTarget.size() > 0)
-		foreach mob in otherTarget
-				Fight(mob);
-		endforeach
-	else
-	endif
-
-endfunction
 
 function look_around()
   foreach npc in ListMobilesInLineOfSight(me, areasize)
