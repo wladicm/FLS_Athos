@@ -103,7 +103,7 @@ program skill_Anatomy(who)
 	var strMsg, strFail;
 
 	if(subject.serial == who.serial)
-		strMsg := "Voce";
+		strMsg := "a si proprio";
 	else
 		strMsg := subject.name;
 		strFail := "das caracteristicas fisicas dessa criatura.";
